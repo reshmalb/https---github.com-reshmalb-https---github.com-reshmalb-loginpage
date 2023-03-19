@@ -2,6 +2,7 @@ import React, { useState ,useEffect,useReducer} from 'react';
 import Button from '../UI/Button/Button';
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
+import AuthContext from '../../ContextStore/auth-context';
 const emailReducer=(state,action)=>{
       if(action.type==='USER_INPUT'){
         return {value:action.val, isValid:action.val.includes('@')}
@@ -36,7 +37,6 @@ const Login = (props) => {
   // const [passwordIsValid, setPasswordIsValid] = useState();
   // const [collegeIsValid, setCollegeIsValid] = useState();
   // const [enteredCollege, setEnteredCollege] = useState('');
-
   
   //useReducer for email
   const [emailState,dispatchEmail]=useReducer(emailReducer,{value:'',isValid:null})

@@ -1,10 +1,13 @@
-import React, { useState ,useEffect,useReducer} from 'react';
+import React, { useState ,useEffect,useReducer,useRef} from 'react';
 import Button from '../UI/Button/Button';
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
 
 import Input from '../Input/Input'
+
 const emailReducer=(state,action)=>{
+
+    
       if(action.type==='USER_INPUT'){
         return {value:action.val, isValid:action.val.includes('@')}
 
@@ -15,7 +18,6 @@ const emailReducer=(state,action)=>{
       }  
   //default or initial value
   return {value:'',isValid:false}
-
 }
 
 const passwordReducer=(state,action)=>{
@@ -103,11 +105,21 @@ const [formIsValid, setFormIsValid] = useState(false);
   // const validateCollegeHandler = () => {
   //   setCollegeIsValid(enteredCollege.trim().length>1);
   // };
-  
+  const emailInputRef=useRef();
+  const passwordInputRef=useRef();
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    if(formIsValid){
+      props.onLogin(emailState.value, passwordState.value);
+    }
+    else if(!emailIsValid){
+        emailInputRef.current.focus();
+    }
+    else{
+        passwordInputRef.current.focus();
+    }
+  
     // props.onLogin(enteredEmail, enteredPassword,enteredCollege);
 
   };
@@ -116,6 +128,7 @@ const [formIsValid, setFormIsValid] = useState(false);
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
         <Input 
+        ref={emailInputRef}
            label="E-mail"
            id="email"
            type="email"
@@ -125,6 +138,7 @@ const [formIsValid, setFormIsValid] = useState(false);
            onBlur={validateEmailHandler}>
         </Input>
         <Input
+        ref={passwordInputRef}
             label="Password"
             id="password"
             type="password"
@@ -156,7 +170,8 @@ const [formIsValid, setFormIsValid] = useState(false);
 
 
         <div className={classes.actions}>
-          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
+          <Button type="submit" className={classes.btn} >
+            {/*Removed property from button  disabled={!formIsValid} for adding forward-ref */}
             Login
           </Button>
         </div>
